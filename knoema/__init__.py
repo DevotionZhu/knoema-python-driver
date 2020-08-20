@@ -65,7 +65,7 @@ def get(dataset = None, include_metadata = False, mnemonics = None, transform = 
 
         metadata = metadata_reader.get_series_metadata()
 
-        reader = TransformationDataReader(client, None, transform, frequency, group_by)
+        reader = StreamingDataReader(client, None, transform, group_by)
         reader.columns = columns
         reader.include_metadata = include_metadata
         reader.dataset = ds

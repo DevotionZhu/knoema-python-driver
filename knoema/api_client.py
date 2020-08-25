@@ -125,6 +125,10 @@ class ApiClient:
         path = '/api/1.0/meta/dataset/{}'
         return self._api_get(definition.Dataset, path.format(datasetid))
 
+    def get_dataset_meta(self, datasetid):
+        path = '/api/1.0/meta/dataset/{}'
+        return self._api_get(definition.DatasetMetadata, path.format(datasetid))
+
     def get_dimension(self, dataset, dimension):
         """The method is getting information about dimension with items"""
 

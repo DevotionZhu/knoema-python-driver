@@ -10,6 +10,33 @@ def is_equal_strings_ignore_case(first, second):
     else:
         return not (first or second)
 
+def parse_date(date_str):
+    return datetime.strptime(date_str.split('.')[0].strip('Z'), '%Y-%m-%dT%H:%M:%S') if date_str != None else None
+
+class DatasetMetadata(object):
+    def __init__(self, data):
+        self.data = data
+
+        if 'updatePriority' in self.data: del self.data['updatePriority']
+        if 'status' in self.data: del self.data['status']
+        if 'hasShortCut' in self.data: del self.data['hasShortCut']
+        if 'settings' in self.data: del self.data['settings']
+        if 'isShortcut' in self.data: del self.data['isShortcut']
+        if 'shareToCommunitiesAllowed' in self.data: del self.data['shareToCommunitiesAllowed']
+        if 'accessedOn' in self.data: del self.data['accessedOn']
+        if 'metadataAccess' in self.data: del self.data['metadataAccess']
+
+        fields_with_date = ['publicationDate', 'nextReleaseDate', 'expectedUpdateDate', 'lastUpdatedOn']
+        for field in fields_with_date:
+            if field in self.data:
+                self.data[field] = parse_date(self.data[field])
+
+        dimensions = []
+        if 'dimensions' in self.data:
+            for dim in self.data['dimensions']:
+                dimensions.append(DimensionModel(dim))
+
+            self.data['dimensions'] = dimensions
 
 class DimensionMember(object):
     """The class contains dimension member information"""
@@ -81,8 +108,8 @@ class DateRange(object):
     """The class contains information about dataset's data range"""
 
     def __init__(self, data):
-        #self.start_date = datetime.strptime(data['startDate'], '%Y-%m-%dT%H:%M:%SZ')
-        #self.end_date = datetime.strptime(data['endDate'], '%Y-%m-%dT%H:%M:%SZ')
+        self.start_date = parse_date(data['startDate'])
+        self.end_date = parse_date(data['endDate'])
         self.frequencies = data['frequencies']
 
 class TimeSeriesAttribute(object):
